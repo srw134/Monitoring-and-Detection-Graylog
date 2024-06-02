@@ -8,4 +8,7 @@ if [ -d "$DIRECTORY" ]; then
     echo "File 'labisready' has been created in the Desktop directory."
 else
     echo "Directory $DIRECTORY does not exist."
+    mkdir "$DIRECTORY"
+    sudo touch "$FILE"
+    echo "File 'labisready' has been created in the Desktop directory."
 fi
