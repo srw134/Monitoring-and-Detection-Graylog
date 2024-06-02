@@ -1,0 +1,568 @@
+{
+  "zeek-filebeat-7.17.21-2024.05.21": {
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "@version": {
+          "type": "keyword",
+          "ignore_above": 256
+        },
+        "agent": {
+          "properties": {
+            "ephemeral_id": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "hostname": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "id": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "name": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "type": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "version": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "destination": {
+          "properties": {
+            "address": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "bytes": {
+              "type": "long"
+            },
+            "ip": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "mac": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "packets": {
+              "type": "long"
+            },
+            "port": {
+              "type": "long"
+            }
+          }
+        },
+        "ecs": {
+          "properties": {
+            "version": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "event": {
+          "properties": {
+            "action": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "category": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "dataset": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "id": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "kind": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "module": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "type": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "file": {
+          "properties": {
+            "hash": {
+              "properties": {
+                "md5": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "sha1": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "mime_type": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "size": {
+              "type": "long"
+            }
+          }
+        },
+        "fileset": {
+          "properties": {
+            "name": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "host": {
+          "properties": {
+            "architecture": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "containerized": {
+              "type": "boolean"
+            },
+            "hostname": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "id": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "ip": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "mac": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "name": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "os": {
+              "properties": {
+                "codename": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "family": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "kernel": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "name": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "platform": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "type": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "version": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        "http": {
+          "properties": {
+            "request": {
+              "properties": {
+                "body": {
+                  "properties": {
+                    "bytes": {
+                      "type": "long"
+                    }
+                  }
+                },
+                "method": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "response": {
+              "properties": {
+                "body": {
+                  "properties": {
+                    "bytes": {
+                      "type": "long"
+                    }
+                  }
+                },
+                "status_code": {
+                  "type": "long"
+                }
+              }
+            },
+            "version": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "input": {
+          "properties": {
+            "type": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "log": {
+          "properties": {
+            "file": {
+              "properties": {
+                "path": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "offset": {
+              "type": "long"
+            }
+          }
+        },
+        "network": {
+          "properties": {
+            "community_id": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "direction": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "protocol": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "transport": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "service": {
+          "properties": {
+            "type": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "source": {
+          "properties": {
+            "address": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "bytes": {
+              "type": "long"
+            },
+            "ip": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "mac": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "packets": {
+              "type": "long"
+            },
+            "port": {
+              "type": "long"
+            }
+          }
+        },
+        "tags": {
+          "type": "keyword",
+          "ignore_above": 256
+        },
+        "temp": {
+          "properties": {
+            "duration": {
+              "type": "float"
+            }
+          }
+        },
+        "url": {
+          "properties": {
+            "domain": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "original": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "port": {
+              "type": "long"
+            }
+          }
+        },
+        "user": {
+          "properties": {
+            "name": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "user_agent": {
+          "properties": {
+            "original": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "zeek": {
+          "properties": {
+            "connection": {
+              "properties": {
+                "history": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "icmp": {
+                  "properties": {
+                    "code": {
+                      "type": "long"
+                    },
+                    "type": {
+                      "type": "long"
+                    }
+                  }
+                },
+                "local_orig": {
+                  "type": "boolean"
+                },
+                "local_resp": {
+                  "type": "boolean"
+                },
+                "missed_bytes": {
+                  "type": "long"
+                },
+                "state": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "ts": {
+                  "type": "float"
+                }
+              }
+            },
+            "files": {
+              "properties": {
+                "analyzers": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "depth": {
+                  "type": "long"
+                },
+                "duration": {
+                  "type": "long"
+                },
+                "fuid": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "id": {
+                  "properties": {
+                    "orig_h": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    },
+                    "orig_p": {
+                      "type": "long"
+                    },
+                    "resp_h": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    },
+                    "resp_p": {
+                      "type": "long"
+                    }
+                  }
+                },
+                "is_orig": {
+                  "type": "boolean"
+                },
+                "local_orig": {
+                  "type": "boolean"
+                },
+                "md5": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "mime_type": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "missing_bytes": {
+                  "type": "long"
+                },
+                "overflow_bytes": {
+                  "type": "long"
+                },
+                "seen_bytes": {
+                  "type": "long"
+                },
+                "sha1": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "source": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "timedout": {
+                  "type": "boolean"
+                },
+                "total_bytes": {
+                  "type": "long"
+                },
+                "ts": {
+                  "type": "float"
+                },
+                "uid": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "ftp": {
+              "properties": {
+                "arg": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "command": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "data_channel": {
+                  "properties": {
+                    "originating_host": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    },
+                    "passive": {
+                      "type": "boolean"
+                    },
+                    "response_host": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    },
+                    "response_port": {
+                      "type": "long"
+                    }
+                  }
+                },
+                "file": {
+                  "properties": {
+                    "mime_type": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    },
+                    "size": {
+                      "type": "long"
+                    },
+                    "uid": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "password": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "reply": {
+                  "properties": {
+                    "code": {
+                      "type": "long"
+                    },
+                    "msg": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "ts": {
+                  "type": "float"
+                },
+                "user": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "http": {
+              "properties": {
+                "resp_fuids": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "resp_mime_types": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "status_msg": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                },
+                "trans_depth": {
+                  "type": "long"
+                },
+                "ts": {
+                  "type": "float"
+                }
+              }
+            },
+            "session_id": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    }
+  }
+}
