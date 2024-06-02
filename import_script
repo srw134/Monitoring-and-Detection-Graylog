@@ -2,7 +2,7 @@
 
 # Set variables
 ELASTICSEARCH_HOST="127.0.0.1:9200"
-INDEX_PATTERN="zeek"
+INDEX_PATTERN="zeek*"
 MAPPINGS_FILE="zeek_indices_mappings.json"
 INPUT_FILE="zeek_indices_export_modify.json"
 BULK_SIZE=1000  # Number of documents per bulk request
@@ -28,16 +28,11 @@ fi
 echo "Importing mappings from ${MAPPINGS_FILE}..."
 while read -r mapping; do
   index_name=$(echo $mapping | jq -r 'keys[]')
+  index_name="zeek"  # Ensure all indices are named "zeek"
   echo "Creating index ${index_name} with its mapping..."
   mapping_content=$(echo $mapping | jq -c ".[\"${index_name}\"].mappings")
   response=$(curl -s -X PUT "${ELASTICSEARCH_HOST}/${index_name}" -H 'Content-Type: application/json' -d '
   {
-    "settings": {
-      "index": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0
-      }
-    },
     "mappings": '"${mapping_content}"'
   }')
   echo "Index ${index_name} created. Response: $response"
@@ -53,6 +48,7 @@ bulk_size=0
 
 while read -r line; do
   index=$(echo $line | jq -r '._index')
+  index="zeek"  # Ensure all documents are indexed to "zeek"
   source=$(echo $line | jq -c '._source')
   doc="{\"index\":{\"_index\":\"${index}\"}}\n${source}\n"
   doc_size=${#doc}
