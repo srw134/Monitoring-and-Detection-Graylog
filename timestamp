@@ -1,0 +1,58 @@
+import json
+from datetime import datetime, timedelta
+
+# Path to the JSON file
+file_path = './zeek_indices_export.json'
+export_path = './zeek_indices_export_modify.json'
+
+# Get the current timestamp
+current_timestamp = datetime.utcnow()
+
+# Calculate the start time (2 hours ago)
+start_time = current_timestamp - timedelta(hours=2)
+
+# Read the JSON file line by line
+with open(file_path, 'r') as file:
+    lines = file.readlines()
+
+# Parse the lines as JSON objects
+records = [json.loads(line) for line in lines]
+
+# Extract the original timestamps
+original_timestamps = [
+    datetime.strptime(record['_source']['@timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ') for record in records
+]
+
+# Calculate the time intervals between the original timestamps
+time_intervals = [
+    (original_timestamps[i] - original_timestamps[i - 1]).total_seconds() for i in range(1, len(original_timestamps))
+]
+
+# Initialize the new timestamps with the start time
+new_timestamps = [start_time]
+
+# Generate the new timestamps based on the original intervals
+for interval in time_intervals:
+    new_timestamps.append(new_timestamps[-1] + timedelta(seconds=interval))
+
+# Function to update the timestamp
+def update_timestamp(record, new_timestamp):
+    old_timestamp = record['_source']['@timestamp']
+    record['_source']['@timestamp'] = new_timestamp.strftime('%Y-%m-%dT%H:%M:%S.%fZ')[:-3] + 'Z'
+    
+    # Log the changes to the console
+    print(f"Old Timestamp: {old_timestamp}, New Timestamp: {record['_source']['@timestamp']}")
+    
+    return record
+
+# Update the records with the new timestamps
+updated_records = [
+    update_timestamp(record, new_timestamp) for record, new_timestamp in zip(records, new_timestamps)
+]
+
+# Write the updated data back to the file
+with open(export_path, 'w') as file:
+    for updated_record in updated_records:
+        file.write(json.dumps(updated_record) + '\n')
+
+print("Timestamps have been updated in the file.")

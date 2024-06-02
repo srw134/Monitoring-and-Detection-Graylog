@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# Set variables
+ELASTICSEARCH_HOST="127.0.0.1:9200"
+INDEX_PATTERN="zeek*"
+MAPPINGS_FILE="zeek_indices_mappings.json"
+INPUT_FILE="zeek_indices_export_modify.json"
+BULK_SIZE=1000  # Number of documents per bulk request
+MAX_BULK_SIZE=5242880  # Maximum bulk size in bytes (5MB)
+TEMP_BULK_FILE=$(mktemp)  # Temporary file for bulk data
+
+echo "Starting import into indices matching pattern ${INDEX_PATTERN} on host ${ELASTICSEARCH_HOST}"
+
+# Retrieve and delete existing indices matching the pattern
+existing_indices=$(curl -s -X GET "${ELASTICSEARCH_HOST}/_cat/indices/${INDEX_PATTERN}?h=index" -H 'Content-Type: application/json')
+if [ -n "$existing_indices" ]; then
+  echo "Indices matching pattern ${INDEX_PATTERN} exist. Deleting..."
+  for index in $existing_indices; do
+    echo "Deleting index ${index}..."
+    response=$(curl -s -X DELETE "${ELASTICSEARCH_HOST}/${index}" -H 'Content-Type: application/json')
+    echo "Index ${index} deleted. Response: $response"
+  done
+else
+  echo "No indices matching pattern ${INDEX_PATTERN} found."
+fi
+
+# Import Mappings
+echo "Importing mappings from ${MAPPINGS_FILE}..."
+while read -r mapping; do
+  index_name=$(echo $mapping | jq -r 'keys[]')
+  echo "Creating index ${index_name} with its mapping..."
+  mapping_content=$(echo $mapping | jq -c ".[\"${index_name}\"].mappings")
+  response=$(curl -s -X PUT "${ELASTICSEARCH_HOST}/${index_name}" -H 'Content-Type: application/json' -d '
+  {
+    "mappings": '"${mapping_content}"'
+  }')
+  echo "Index ${index_name} created. Response: $response"
+done < <(jq -c 'to_entries[]' $MAPPINGS_FILE)
+
+echo "Mappings import complete."
+
+# Import Data
+echo "Importing data from ${INPUT_FILE}..."
+bulk_data=""
+line_count=0
+bulk_size=0
+
+while read -r line; do
+  index=$(echo $line | jq -r '._index')
+  source=$(echo $line | jq -c '._source')
+  doc="{\"index\":{\"_index\":\"${index}\"}}\n${source}\n"
+  doc_size=${#doc}
+
+  # Check if adding this document would exceed the max bulk size
+  if (( bulk_size + doc_size > MAX_BULK_SIZE )); then
+    # Write the current bulk data to the temporary file and send it
+    echo "Sending bulk request with ${line_count} documents..."
+    echo -e "$bulk_data" > "$TEMP_BULK_FILE"
+    response=$(curl -s -X POST "${ELASTICSEARCH_HOST}/_bulk" -H 'Content-Type: application/x-ndjson' --data-binary "@$TEMP_BULK_FILE")
+    echo "Bulk request sent. Response: $response"
+    bulk_data=""
+    bulk_size=0
+    line_count=0
+  fi
+
+  # Add the document to the bulk data
+  bulk_data+="$doc"
+  bulk_size=$((bulk_size + doc_size))
+  ((line_count++))
+done < "$INPUT_FILE"
+
+# Send remaining data to Elasticsearch
+if [ -n "$bulk_data" ]; then
+  echo "Sending final bulk request with ${line_count} documents..."
+  echo -e "$bulk_data" > "$TEMP_BULK_FILE"
+  response=$(curl -s -X POST "${ELASTICSEARCH_HOST}/_bulk" -H 'Content-Type: application/x-ndjson' --data-binary "@$TEMP_BULK_FILE")
+  echo "Final bulk request sent. Response: $response"
+fi
+
+# Clean up temporary file
+rm "$TEMP_BULK_FILE"
+
+echo "Import complete."
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DIRECTORY="/home/pslearner/Desktop"
+FILE="$DIRECTORY/labisready"
+
+if [ -d "$DIRECTORY" ]; then
+    sudo touch "$FILE"
+    echo "File 'labisready' has been created in the Desktop directory."
+else
+    echo "Directory $DIRECTORY does not exist."
+fi
